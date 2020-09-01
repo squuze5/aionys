@@ -25,7 +25,7 @@ exports.getAllNotes = (req, res) => {
 }
 
 // GET Note by ID
-exports.getNotesByID = (req, res) => {
+exports.getNoteByID = (req, res) => {
     let noteData = {};
 
     db
@@ -42,6 +42,34 @@ exports.getNotesByID = (req, res) => {
             noteData.id = doc.id;
             
             return res.status(200).json(noteData);
+        })
+        .catch(error => {
+            console.error(error);
+            return res.status(500).json({ message: 'Something went wrong!' });
+        })
+}
+
+// POST New Note
+exports.addNewNote = (req, res) => {
+    if (req.body.body === '') {
+        return res.status(400).json({
+            error: 'Bad request',
+            message: 'Must not be empty!'
+        })
+    }
+
+    const newNote = {
+        name: req.body.name,
+        createdAt: new Date().toISOString()
+    };
+
+    db
+        .collection('notes')
+        .add(newNote)
+        .then(doc => {
+            res.status(200).json({
+                message: `Note with ID ${doc.id} created successfully`
+            })
         })
         .catch(error => {
             console.error(error);
