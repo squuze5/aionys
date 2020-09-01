@@ -6,12 +6,14 @@ const {
     getAllNotes, 
     getNoteByID,
     addNewNote,
-    updateNote
+    updateNote,
+    deleteNote
 } = require('./routes/notes');
 
 app.get('/notes', getAllNotes);
 app.get('/notes/:id', getNoteByID);
 app.post('/notes', addNewNote);
 app.put('/notes/:id', updateNote);
+app.delete('/notes/:id', deleteNote);
 
 exports.api = functions.https.onRequest(app);

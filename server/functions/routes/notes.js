@@ -106,7 +106,33 @@ exports.updateNote = (req, res) => {
         })
         .then(() => {
             res.status(200).json({
-                message: 'Note editting successfully'
+                message: 'Note editting successfully!'
+            })
+        })
+        .catch(error => {
+            console.error(error);
+            return res.status(500).json({ message: 'Something went wrong!' });
+        })
+}
+
+exports.deleteNote = (req, res) => {
+    const document = db.doc(`/notes/${req.params.id}`);
+
+    document
+        .get()
+        .then(doc => {
+            if (!doc.exists) {
+                return res.status(404).json({
+                    error: 'Not found',
+                    message: 'Note with this ID not found!'
+                })
+            }
+
+            return document.delete();
+        })
+        .then(() => {
+            res.status(200).json({
+                message: 'Note deleted successfully!'
             })
         })
         .catch(error => {
